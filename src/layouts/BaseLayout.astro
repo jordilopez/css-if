@@ -1,0 +1,79 @@
+---
+import 'css-starter';
+import '../styles/demo.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'A demo of the CSS if() inline conditional function, supported in Chrome 137+.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <script is:inline>
+      (function () {
+        try {
+          var supported = CSS.supports('background-color', 'if(else: yellow)');
+          document.documentElement.dataset.cssif = supported ? 'supported' : 'unsupported';
+        } catch (e) {
+          document.documentElement.dataset.cssif = 'unsupported';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <p class="site-header__tag">CSS Conditional Values Level 5</p>
+      <h1 class="site-header__title">{title}</h1>
+      <p class="site-header__desc">{description}</p>
+    </header>
+
+    <div id="if-notice" class="callout callout--warning" role="status" hidden>
+      <span class="callout__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4.5 21h15a2 2 0 0 0 1.73-3Z" />
+          <path d="M12 9v4M12 17h.01" />
+        </svg>
+      </span>
+      <div class="callout__content">
+        <p class="callout__title">Chrome only.</p>
+        <p class="callout__body">
+          The CSS <code>if()</code> function is currently only supported in
+          <a href="https://caniuse.com/css-if">Chrome 137+ (and Edge 137+)</a>.
+          You're seeing the plain fallback — the card below still renders, but
+          none of the conditional values apply. Open this page in Chrome to see
+          the real thing.
+        </p>
+      </div>
+    </div>
+
+    <main class="site-main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <h2>Resources</h2>
+      <ul>
+        <li><a href="https://caniuse.com/css-if">caniuse: css-if</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/if">MDN: if()</a></li>
+        <li><a href="https://drafts.csswg.org/css-values-5/#if-notation">CSS Values and Units Module Level 5 — W3C</a></li>
+        <li><a href="https://github.com/mfranzke/css-if-polyfill">css-if-polyfill (PostCSS + JS)</a></li>
+      </ul>
+    </footer>
+
+    <script is:inline>
+      (function () {
+        var notice = document.getElementById('if-notice');
+        if (notice && document.documentElement.dataset.cssif === 'unsupported') {
+          notice.hidden = false;
+        }
+      })();
+    </script>
+  </body>
+</html>

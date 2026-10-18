@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Preview from '../components/Preview.astro';
+import { EXAMPLES } from '../lib/examples';
+---
+<BaseLayout title="CSS if() Function Demo">
+  <section class="playground">
+    <fieldset class="picker">
+      <legend class="sr-only">Choose an if() example</legend>
+      {EXAMPLES.map((ex, i) => (
+        <label class="picker__option" for={`ex-${ex.id}`}>
+          <input
+            type="radio"
+            name="example"
+            id={`ex-${ex.id}`}
+            value={ex.id}
+            checked={i === 0}
+          />
+          <span>{ex.label}</span>
+        </label>
+      ))}
+    </fieldset>
+
+    {EXAMPLES.map((ex, i) => (
+      <div class:list={['ex-meta', `ex-meta--${ex.id}`]} hidden={i !== 0}>
+        <h2 class="example__title">{i + 1}. {ex.title}</h2>
+        <p class="example__desc">{ex.description}</p>
+        <pre class="example__pre"><code>{ex.code}</code></pre>
+      </div>
+    ))}
+
+    <Preview />
+  </section>
+</BaseLayout>

@@ -1,0 +1,232 @@
+/* ==========================================================================
+   Demo styles — deliberately unlayered so they win over css-starter.* layers
+   ========================================================================== */
+
+/* css-starter's `.callout` sets `display: flex`, which beats the UA
+   stylesheet's `[hidden] { display: none }`. Without this guard the
+   unsupported-browser notice would render even when `hidden` is set. */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  font-family: var(--ff-sans);
+  color: var(--c-text);
+  background: var(--c-bg);
+  max-width: 75rem;
+  margin-inline: auto;
+  padding-inline: var(--sp-4, 1.5rem);
+}
+
+/* --- header --- */
+
+.site-header {
+  padding-block: var(--sp-6, 3rem) var(--sp-4, 1.5rem);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.site-header__tag {
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-primary);
+  font-weight: var(--fw-semibold);
+  margin: 0;
+}
+
+.site-header__title {
+  font-size: var(--fs-2xl);
+  margin: var(--sp-2, 0.5rem) 0;
+}
+
+.site-header__desc {
+  color: var(--c-text-secondary);
+  margin: 0;
+}
+
+/* --- shared example sections --- */
+
+.site-main > section {
+  padding-block: var(--sp-6, 3rem);
+}
+
+.example__title {
+  font-size: var(--fs-xl);
+  margin: 0 0 var(--sp-2, 0.5rem);
+}
+
+.example__desc {
+  color: var(--c-text-secondary);
+  margin: 0 0 var(--sp-4, 1.5rem);
+  max-width: 60ch;
+}
+
+.example__pre {
+  font-family: var(--ff-mono);
+  font-size: var(--fs-sm);
+  background: var(--c-bg-subtle);
+  border: 1px solid var(--c-border-light);
+  border-radius: var(--br-md, 8px);
+  padding: var(--sp-3, 1rem) var(--sp-4, 1.5rem);
+  margin: 0 0 var(--sp-4, 1.5rem);
+  overflow-x: auto;
+  line-height: var(--lh-base);
+}
+
+/* --- example picker: page-level spacing only; pills come from css-starter --- */
+
+.picker {
+  margin-block-end: var(--sp-4, 1.5rem);
+}
+
+/* --- per-example title / description / code: only the selected one shows --- */
+
+.ex-meta {
+  display: none;
+}
+
+body:has(#ex-supports:checked) .ex-meta--supports,
+body:has(#ex-media:checked) .ex-meta--media,
+body:has(#ex-style:checked) .ex-meta--style,
+body:has(#ex-boolean:checked) .ex-meta--boolean,
+body:has(#ex-branches:checked) .ex-meta--branches,
+body:has(#ex-nested:checked) .ex-meta--nested {
+  display: block;
+}
+
+/* --- the preview card ---------------------------------------------------
+   This is the single element every if() example restyles. The base rules
+   below are what an unsupported browser falls back to (and what a
+   supported browser shows for any property an example doesn't touch). */
+
+.preview {
+  max-width: 34rem;
+  margin-block: var(--sp-4, 1.5rem);
+  padding: var(--sp-6, 2rem);
+  background-color: var(--c-bg-subtle);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  color: var(--c-text);
+}
+
+.preview__eyebrow {
+  margin: 0 0 var(--sp-2, 0.5rem);
+  font-size: var(--fs-sm);
+  font-family: var(--ff-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--c-primary);
+}
+
+.preview__title {
+  margin: 0 0 var(--sp-2, 0.5rem);
+  font-size: 1.25em;
+  line-height: var(--lh-tight);
+}
+
+.preview__body {
+  margin: 0 0 var(--sp-4, 1rem);
+  color: inherit;
+  opacity: 0.8;
+}
+
+.preview__chip {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  background-color: var(--c-primary-subtle);
+  color: var(--c-primary);
+  font-family: var(--ff-mono);
+  font-size: var(--fs-sm);
+}
+
+/* --- layout variants, driven by the picker via :has() ---
+   Each example changes a different value axis on the same card. */
+
+/* 1. supports() — capability-gated background colour.
+   The value is mixed against --c-bg so it adapts to the colour scheme. */
+body:has(#ex-supports:checked) .preview {
+  background-color: if(
+    supports(color: oklch(60% 0.2 250)):
+      color-mix(in oklch, var(--c-primary) 20%, var(--c-bg));
+    else: #cfd8e3;
+  );
+}
+
+/* 2. media() — viewport-conditioned font size (resize past 60rem) */
+body:has(#ex-media:checked) .preview {
+  font-size: if(
+    media(width >= 60rem): 1.75rem;
+    else: 1.15rem;
+  );
+}
+
+/* 3. style() — custom-property-driven padding */
+body:has(#ex-style:checked) {
+  --density: compact;
+}
+body:has(#ex-style:checked) .preview {
+  padding: if(
+    style(--density: compact): 1rem;
+    else: 2.5rem;
+  );
+}
+
+/* 4. boolean expressions — and / or / not */
+body:has(#ex-boolean:checked) .preview {
+  border: if(
+    media(width >= 48rem) and supports(color: oklch(60% 0.2 250)):
+      4px solid var(--c-primary);
+    else: 1px solid var(--c-border);
+  );
+}
+
+/* 5. multiple branches — first match wins.
+   Each colour is mixed toward --c-text so contrast follows the scheme. */
+body:has(#ex-branches:checked) {
+  --mood: alert;
+}
+body:has(#ex-branches:checked) .preview {
+  color: if(
+    style(--mood: calm):
+      color-mix(in oklch, oklch(0.6 0.15 200) 60%, var(--c-text));
+    style(--mood: alert):
+      color-mix(in oklch, oklch(0.6 0.2 25) 60%, var(--c-text));
+    else: var(--c-text);
+  );
+}
+
+/* 6. nested if() — one value responding to two signals */
+body:has(#ex-nested:checked) {
+  --elevation: high;
+}
+body:has(#ex-nested:checked) .preview {
+  box-shadow: if(
+    style(--elevation: high):
+      if(
+        media(prefers-color-scheme: dark): 0 10px 30px rgb(0 0 0 / 0.7);
+        else: 0 10px 30px rgb(0 0 0 / 0.18);
+      );
+    else: none;
+  );
+}
+
+/* --- fallback for browsers without if() ---------------------------------
+   Every if() declaration above is invalid and dropped, so the card keeps
+   its base styling. We only make sure it stays legible and centred. */
+
+@supports not (background-color: if(else: yellow)) {
+  .preview {
+    margin-inline: auto;
+  }
+}
+
+/* --- footer --- */
+
+.site-footer {
+  border-top: 1px solid var(--c-border);
+  margin-top: var(--sp-6, 3rem);
+  padding-block: var(--sp-5, 2.5rem);
+  color: var(--c-text-secondary);
+  font-size: var(--fs-sm);
+}
