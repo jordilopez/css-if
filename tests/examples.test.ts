@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { EXAMPLES } from '../src/lib/examples';
 
 describe('EXAMPLES config', () => {
-  it('has six layout examples', () => {
+  it('has six examples', () => {
     expect(EXAMPLES).toHaveLength(6);
   });
 

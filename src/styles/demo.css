@@ -3,10 +3,11 @@
    ========================================================================== */
 
 /* css-starter's `.callout` sets `display: flex`, which beats the UA
-   stylesheet's `[hidden] { display: none }`. Without this guard the
-   unsupported-browser notice would render even when `hidden` is set. */
-[hidden] {
-  display: none !important;
+   stylesheet's `[hidden] { display: none }`. The notice is the only element
+   that combines `callout` with `hidden`, so this selector (specificity
+   0,2,0) restores the hidden-equivalent without !important. */
+.callout[hidden] {
+  display: none;
 }
 
 body {

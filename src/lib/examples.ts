@@ -57,10 +57,10 @@ export const EXAMPLES: ExampleConfig[] = [
     label: 'and / or / not',
     title: 'Combining conditions',
     description:
-      'Conditions compose with and, or and not, exactly like a @media or @supports condition. This border only goes primary when the viewport is at least 48rem wide and the card is in compact density — two unrelated signals combined into a single value.',
+      'Conditions compose with and, or and not, exactly like a @media or @supports condition. This border only goes primary when the viewport is at least 48rem wide and the browser can render oklch() — two unrelated signals combined into a single value.',
     code: `.preview {
   border: if(
-    media(width >= 48rem) and style(--density: compact):
+    media(width >= 48rem) and supports(color: oklch(60% 0.2 250)):
       4px solid var(--c-primary);
     else: 1px solid var(--c-border);
   );
